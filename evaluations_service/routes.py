@@ -153,3 +153,56 @@ def register_routes(app):
         db.session.commit()
 
         return jsonify({"message": "Eliminada"})
+    
+    #Submissions
+    @app.route('/api/submissions', methods=['POST'])
+    def create_submission():
+        data = request.json
+
+        submission = Submission(
+            exam_id=data['exam_id'],
+            user_id=data['user_id'],
+            score=data['score'],
+            passed=data['passed']
+        )
+
+        db.session.add(submission)
+        db.session.commit()
+
+        return jsonify({"exam_id" : submission.exam_id, "user_id" : submission.user_id, "score" : submission.score, "passed" : submission.score})
+    
+    @app.route('/api/submissions', methods=['GET'])
+    def get_submissions():
+        subs = Submission.query.all()
+
+        return jsonify([
+            {
+                "id": s.id,
+                "exam_id": s.exam_id,
+                "user_id": s.user_id,
+                "score": s.score,
+                "passed": s.passed
+            } for s in subs
+        ])
+    
+    @app.route('/api/submissions/<int:id>', methods=['PUT'])
+    def update_submission(id):
+        s = Submission.query.get_or_404(id)
+        data = request.json
+
+        s.score = data.get('score', s.score)
+        s.passed = data.get('passed', s.passed)
+
+        db.session.commit()
+
+        return jsonify({"exam_id" : s.exam_id, "user_id" : s.user_id, "score" : s.score, "passed" : s.score})
+
+    
+    @app.route('/api/submissions/<int:id>', methods=['DELETE'])
+    def delete_submission(id):
+        s = Submission.query.get_or_404(id)
+
+        db.session.delete(s)
+        db.session.commit()
+
+        return jsonify({"message": "Eliminada"})
