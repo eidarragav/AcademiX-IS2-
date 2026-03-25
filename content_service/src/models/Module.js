@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const moduleSchema = new mongoose.Schema({
     course_id:{
-        type: Integer,
+        type: Number,
         required: true
     },
     title: {
