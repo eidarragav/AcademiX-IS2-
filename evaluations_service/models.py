@@ -19,3 +19,11 @@ class Question(db.Model):
     option_c = db.Column(db.String(200), nullable = False)
     option_d = db.Column(db.String(200), nullable = False)
     correct_option = db.Column(db.String(2), nullable = False)
+
+class Submission(db.Model):
+    __tablename__ = 'submissions'
+    id = db.Column(db.Integer, primary_key = True)
+    exam_id = db.Column(db.Integer, nullable = False)
+    user_id = db.Column(db.Integer, nullable = False)
+    score = db.Column(db.Integer, nullable= False)
+    passed = db.Column(db.String(10), nullable = False)
