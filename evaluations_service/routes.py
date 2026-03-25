@@ -119,7 +119,7 @@ def register_routes(app):
 
         return jsonify(result)
     
-    @app.route('/questions/<int:id>', methods=['PUT'])
+    @app.route('/api/questions/<int:id>', methods=['PUT'])
     def update_question(id):
         q = Question.query.get_or_404(id)
         data = request.json
@@ -145,7 +145,7 @@ def register_routes(app):
                         "correct_option" : q.correct_option,
                         })
     
-    @app.route('/questions/<int:id>', methods=['DELETE'])
+    @app.route('/api/questions/<int:id>', methods=['DELETE'])
     def delete_question(id):
         q = Question.query.get_or_404(id)
 
@@ -169,7 +169,7 @@ def register_routes(app):
         db.session.add(submission)
         db.session.commit()
 
-        return jsonify({"exam_id" : submission.exam_id, "user_id" : submission.user_id, "score" : submission.score, "passed" : submission.score})
+        return jsonify({"exam_id" : submission.exam_id, "user_id" : submission.user_id, "score" : submission.score, "passed" : submission.passed})
     
     @app.route('/api/submissions', methods=['GET'])
     def get_submissions():
@@ -195,7 +195,7 @@ def register_routes(app):
 
         db.session.commit()
 
-        return jsonify({"exam_id" : s.exam_id, "user_id" : s.user_id, "score" : s.score, "passed" : s.score})
+        return jsonify({"exam_id" : s.exam_id, "user_id" : s.user_id, "score" : s.score, "passed" : s.passed})
 
     
     @app.route('/api/submissions/<int:id>', methods=['DELETE'])
