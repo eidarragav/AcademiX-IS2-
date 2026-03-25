@@ -75,3 +75,81 @@ def register_routes(app):
         db.session.commit()
 
         return jsonify({"message": "Eliminado"})
+    
+#Questions
+    @app.route('/api/questions', methods=['POST'])
+    def create_question():
+        data = request.json
+
+        question = Question(
+            exam_id=data['exam_id'],
+            text=data['text'],
+            option_a=data['option_a'],
+            option_b=data['option_b'],
+            option_c=data['option_c'],
+            option_d=data['option_d'],
+            correct_option=data['correct_option']
+        )
+
+        db.session.add(question)
+        db.session.commit()
+
+        return jsonify({
+                        "id" : question.id,
+                        "exam_id" : question.exam_id,
+                        "text" : question.text,
+                        "option_a" : question.option_a,
+                        "option_b" : question.option_b,
+                        "option_c" : question.option_c,
+                        "option_d" : question.option_d,
+                        "correct_option" : question.correct_option,
+                        })
+    
+    @app.route('/api/questions', methods=['GET'])
+    def get_questions():
+        questions = Question.query.all()
+
+        result = []
+        for q in questions:
+            result.append({
+                "id": q.id,
+                "text": q.text,
+                "correct_option": q.correct_option
+            })
+
+        return jsonify(result)
+    
+    @app.route('/questions/<int:id>', methods=['PUT'])
+    def update_question(id):
+        q = Question.query.get_or_404(id)
+        data = request.json
+
+        q.exam_id=data['exam_id'],
+        q.text=data['text'],
+        q.option_a=data['option_a'],
+        q.option_b=data['option_b'],
+        q.option_c=data['option_c'],
+        q.option_d=data['option_d'],
+        q.correct_option=data['correct_option']
+
+        db.session.commit()
+
+        return jsonify({
+                        "id" : q.id,
+                        "exam_id" : q.exam_id,
+                        "text" : q.text,
+                        "option_a" : q.option_a,
+                        "option_b" : q.option_b,
+                        "option_c" : q.option_c,
+                        "option_d" : q.option_d,
+                        "correct_option" : q.correct_option,
+                        })
+    
+    @app.route('/questions/<int:id>', methods=['DELETE'])
+    def delete_question(id):
+        q = Question.query.get_or_404(id)
+
+        db.session.delete(q)
+        db.session.commit()
+
+        return jsonify({"message": "Eliminada"})
