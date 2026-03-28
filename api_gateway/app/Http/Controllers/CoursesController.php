@@ -8,7 +8,22 @@ use Illuminate\Support\Facades\Http;
 class CoursesController extends Controller
 {
     public function create_course(Request $request){
-        
+        $instructor = auth()->user();
+
+        $response = Http::withHeaders([
+            "Authorization" => env("services_token")
+        ])->post(env("courses_endpoint"),[
+            "title" => $request->title,
+            "description" => $request->description,
+            "category" => $request->category,
+            "level" => $request->level,
+            "instructor_id" => $instructor->id,
+        ]);
+
+        return [
+            "status" => $response->status,
+            "body" => $response->body
+        ];
     }
 
     public function index_courses(){
