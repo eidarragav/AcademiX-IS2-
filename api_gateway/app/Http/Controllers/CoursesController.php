@@ -22,8 +22,15 @@ class CoursesController extends Controller
         ];
     }
 
-    public function index_course(){
+    public function index_course($id){
+        $response = Http::withHeaders([
+            "Authorization" => env("services_token")
+        ])->get(env("courses_endpoint")."/".$id);
 
+        return [
+            "status" => $response->status,
+            "body" => $response->body
+        ];
     }
 
     public function update_course(Request $request, $id){
