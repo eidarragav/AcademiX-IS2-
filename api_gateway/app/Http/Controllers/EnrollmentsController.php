@@ -9,7 +9,16 @@ class EnrollmentsController extends Controller
     public function create_enrollment(Request $request){
         $user = auth()->user();
 
-        
+        $course_exist = Http::withHeaders([
+            "Authorization" => env("SERVICES_TOKEN")
+        ])->get(env("COURSES_ENDPOINT")."/".$request->course_id);
+
+        if($course_exist->status() == 404){
+            return [
+                "mensaje" => "el curso no existe"
+            ];
+        };
+
 
         $response = Http::withHeaders([
             "Authorization" => env("SERVICES_TOKEN")
