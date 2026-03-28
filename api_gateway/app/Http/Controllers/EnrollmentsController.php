@@ -71,7 +71,7 @@ class EnrollmentsController extends Controller
 
         $response = Http::withHeaders([
             "Authorization" => env("SERVICES_TOKEN")
-        ])->put(env("ENROLLMENTS_ENDPOINT"),[
+        ])->put(env("ENROLLMENTS_ENDPOINT"."/".$id),[
             "course_id" => $request->course_id,
             "status" => $request->status,
         ]);
@@ -83,7 +83,14 @@ class EnrollmentsController extends Controller
     }
 
     public function delete_enrollment($id){
+        $response = Http::withHeaders([
+            "Authorization" => env("SERVICES_TOKEN")
+        ])->delete(env("ENROLLMENTS_ENDPOINT"."/".$id));
 
+        return [
+            "status" => $response->status(),
+            "body" => $response->json()
+        ];
     }
 }
 
