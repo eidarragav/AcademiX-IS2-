@@ -1,6 +1,5 @@
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy # type: ignore
 db = SQLAlchemy()
-
 
 class Course(db.Model):
     __tablename__ = 'courses'
