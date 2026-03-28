@@ -7,15 +7,44 @@ use Illuminate\Http\Request;
 class EnrollmentsController extends Controller
 {
     public function create_enrollment(Request $request){
+        $user = auth()->user();
 
+        
+
+        $response = Http::withHeaders([
+            "Authorization" => env("SERVICES_TOKEN")
+        ])->post(env("ENROLLMENTS_ENDPOINT"),[
+            "course_id" => $request->course_id,
+            "user_id" => $user->id,
+            "status" => $request->status,
+        ]);
+
+        return [
+            "status" => $response->status(),
+            "body" => $response->json()
+        ];
     }
 
     public function index_enrollments(){
+        $response = Http::withHeaders([
+            "Authorization" => env("SERVICES_TOKEN")
+        ])->get(env("ENROLLMENTS_ENDPOINT"));
 
+        return [
+            "status" => $response->status(),
+            "body" => $response->json()
+        ];
     }
 
     public function index_enrollment($id){
+        $response = Http::withHeaders([
+            "Authorization" => env("SERVICES_TOKEN")
+        ])->get(env("ENROLLMENTS_ENDPOINT"."/".$id));
 
+        return [
+            "status" => $response->status(),
+            "body" => $response->json()
+        ];
     }
     
     public function update_enrollment($id){
