@@ -58,6 +58,28 @@ class EnrollmentsController extends Controller
     
     public function update_enrollment($id){
 
+        $course_exist = Http::withHeaders([
+            "Authorization" => env("SERVICES_TOKEN")
+        ])->get(env("COURSES_ENDPOINT")."/".$request->course_id);
+
+        if($course_exist->status() == 404){
+            return [
+                "mensaje" => "el curso no existe"
+            ];
+        };
+
+
+        $response = Http::withHeaders([
+            "Authorization" => env("SERVICES_TOKEN")
+        ])->put(env("ENROLLMENTS_ENDPOINT"),[
+            "course_id" => $request->course_id,
+            "status" => $request->status,
+        ]);
+
+        return [
+            "status" => $response->status(),
+            "body" => $response->json()
+        ];
     }
 
     public function delete_enrollment($id){
