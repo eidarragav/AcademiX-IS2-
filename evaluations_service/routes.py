@@ -53,7 +53,7 @@ def register_routes(app):
             "course_id": exam.course_id,
             "passing_score": exam.passing_score,
             "questions": questions
-        })
+        }), 200
     
     @app.route('/api/exams/<int:id>', methods=['PUT'])
     def update_exam(id):

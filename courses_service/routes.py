@@ -11,6 +11,18 @@ def register_routes(app):
                          'category' : c.category,
                          'level' : c.level,
                         } for c in courses])
+    
+    @app.route("/api/courses/<int:id>", methods = ['GET'])
+    def get_course(id):
+        course = Course.query.get_or_404(id)
+
+        return jsonify({'id': course.id,
+                         'title' : course.title,
+                         'description' : course.description,
+                         'category' : course.category,
+                         'level' : course.level,
+                        }), 200
+        
 
     @app.route('/api/courses', methods = ['POST'])
     def post_courses():
