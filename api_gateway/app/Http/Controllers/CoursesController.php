@@ -22,7 +22,7 @@ class CoursesController extends Controller
 
         return [
             "status" => $response->status(),
-            "body" => $response->body()
+            "body" => $response->json()
         ];
     }
 
@@ -33,7 +33,7 @@ class CoursesController extends Controller
 
         return [
             "status" => $response->status(),
-            "body" => $response->body()
+            "body" => $response->json()
         ];
     }
 
@@ -44,7 +44,7 @@ class CoursesController extends Controller
 
         return [
             "status" => $response->status(),
-            "body" => $response->body()
+            "body" => $response->json()
         ];
     }
 
@@ -61,7 +61,7 @@ class CoursesController extends Controller
 
         return [
             "status" => $response->status(),
-            "body" => $response->body()
+            "body" => $response->json()
         ];
     }
 
@@ -72,7 +72,7 @@ class CoursesController extends Controller
 
         return [
             "status" => $response->status(),
-            "body" => $response->body()
+            "body" => $response->json()
         ];
     }
 }
