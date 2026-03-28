@@ -11,8 +11,8 @@ class CoursesController extends Controller
         $instructor = auth()->user();
 
         $response = Http::withHeaders([
-            "Authorization" => env("services_token")
-        ])->post(env("courses_endpoint"),[
+            "Authorization" => env("SERVICES_TOKEN")
+        ])->post(env("COURSES_ENDPOINT"),[
             "title" => $request->title,
             "description" => $request->description,
             "category" => $request->category,
@@ -28,8 +28,8 @@ class CoursesController extends Controller
 
     public function index_courses(){
         $response = Http::withHeaders([
-            "Authorization" => env("services_token")
-        ])->get(env("courses_endpoint"));
+            "Authorization" => env("SERVICES_TOKEN")
+        ])->get(env("COURSES_ENDPOINT"));
 
         return [
             "status" => $response->status,
@@ -39,8 +39,8 @@ class CoursesController extends Controller
 
     public function index_course($id){
         $response = Http::withHeaders([
-            "Authorization" => env("services_token")
-        ])->get(env("courses_endpoint")."/".$id);
+            "Authorization" => env("SERVICES_TOKEN")
+        ])->get(env("COURSES_ENDPOINT")."/".$id);
 
         return [
             "status" => $response->status,
@@ -49,11 +49,10 @@ class CoursesController extends Controller
     }
 
     public function update_course(Request $request, $id){
-        $instructor = auth()->user();
 
         $response = Http::withHeaders([
-            "Authorization" => env("services_token")
-        ])->put(env("courses_endpoint"."/".$id),[
+            "Authorization" => env("SERVICES_TOKEN")
+        ])->put(env("COURSES_ENDPOINT"."/".$id),[
             "title" => $request->title,
             "description" => $request->description,
             "category" => $request->category,
@@ -67,6 +66,13 @@ class CoursesController extends Controller
     }
 
     public function delete_course(Request $request, $id){
+        $response = Http::withHeaders([
+            "Authorization" => env("SERVICES_TOKEN")
+        ])->delete(env("COURSES_ENDPOINT"."/".$id));
 
+        return [
+            "status" => $response->status,
+            "body" => $response->body
+        ];
     }
 }
