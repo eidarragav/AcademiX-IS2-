@@ -18,7 +18,7 @@ Route::post("/restore_password", [AuthController::class, 'restore_password']);
 
 
 //Courses routes
-Route::post("/courses", [CoursesController::class, 'create_course']);
+Route::post("/courses", [CoursesController::class, 'create_course'])->middleware('auth:sanctum');
 Route::get("/courses", [CoursesController::class, 'index_courses']);
 Route::get("/courses/{id}", [CoursesController::class, 'index_course']);
 Route::put("/courses/{id}", [CoursesController::class, 'update_course']);

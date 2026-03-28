@@ -21,8 +21,8 @@ class CoursesController extends Controller
         ]);
 
         return [
-            "status" => $response->status,
-            "body" => $response->body
+            "status" => $response->status(),
+            "body" => $response->body()
         ];
     }
 
@@ -32,8 +32,8 @@ class CoursesController extends Controller
         ])->get(env("COURSES_ENDPOINT"));
 
         return [
-            "status" => $response->status,
-            "body" => $response->body
+            "status" => $response->status(),
+            "body" => $response->body()
         ];
     }
 
@@ -43,8 +43,8 @@ class CoursesController extends Controller
         ])->get(env("COURSES_ENDPOINT")."/".$id);
 
         return [
-            "status" => $response->status,
-            "body" => $response->body
+            "status" => $response->status(),
+            "body" => $response->body()
         ];
     }
 
@@ -52,7 +52,7 @@ class CoursesController extends Controller
 
         $response = Http::withHeaders([
             "Authorization" => env("SERVICES_TOKEN")
-        ])->put(env("COURSES_ENDPOINT"."/".$id),[
+        ])->put(env("COURSES_ENDPOINT")."/".$id,[
             "title" => $request->title,
             "description" => $request->description,
             "category" => $request->category,
@@ -60,19 +60,19 @@ class CoursesController extends Controller
         ]);
 
         return [
-            "status" => $response->status,
-            "body" => $response->body
+            "status" => $response->status(),
+            "body" => $response->body()
         ];
     }
 
     public function delete_course(Request $request, $id){
         $response = Http::withHeaders([
             "Authorization" => env("SERVICES_TOKEN")
-        ])->delete(env("COURSES_ENDPOINT"."/".$id));
+        ])->delete(env("COURSES_ENDPOINT")."/".$id);
 
         return [
-            "status" => $response->status,
-            "body" => $response->body
+            "status" => $response->status(),
+            "body" => $response->body()
         ];
     }
 }

@@ -68,7 +68,6 @@ def register_routes(app):
 
     @app.route('/api/courses/<int:id>', methods = ['DELETE'])
     def delete_courses(id):
-        data = request.get_json()
         course = Course.query.get_or_404(id)
 
         db.session.delete(course)
