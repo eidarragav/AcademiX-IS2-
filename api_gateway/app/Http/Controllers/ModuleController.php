@@ -81,6 +81,13 @@ class ModuleController extends Controller
     }
 
     public function delete_module($id){
+        $response = Http::withHeaders([
+            "Authorization" => env("SERVICES_TOKEN")
+        ])->delete(env("CONTENT_MODULES_ENDPOINT")."/".$id);
 
+        return [
+            "status" => $response->status(),
+            "body" => $response->json()
+        ];
     }
 }
