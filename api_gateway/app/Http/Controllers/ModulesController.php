@@ -68,7 +68,7 @@ class ModulesController extends Controller
 
         $response = Http::withHeaders([
             "Authorization" => env("SERVICES_TOKEN")
-        ])->put(env("CONTENT_MODULES_ENDPOINT"),[
+        ])->put(env("CONTENT_MODULES_ENDPOINT")."/".$id,[
             "course_id" => $request->course_id,
             "title" => $request->title,
             "description" => $request->description
