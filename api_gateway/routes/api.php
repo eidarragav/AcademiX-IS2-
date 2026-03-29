@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CoursesController;
 use App\Http\Controllers\EnrollmentsController;
+use App\Http\Controllers\ModulesController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -31,3 +32,10 @@ Route::get("/enrollments", [EnrollmentsController::class, 'index_enrollments']);
 Route::get("/enrollments/{id}", [EnrollmentsController::class, 'index_enrollment']);
 Route::put("/enrollments/{id}", [EnrollmentsController::class, 'update_enrollment']);
 Route::delete("/enrollments/{id}", [EnrollmentsController::class, 'delete_enrollment']);
+
+//Modules routes
+Route::post("/modules", [ModulesController::class, 'create_module']);
+Route::get("/modules", [ModulesController::class, 'index_modules']);
+Route::get("/modules/{id}", [ModulesController::class, 'index_module']);
+Route::put("/modules/{id}", [ModulesController::class, 'update_module']);
+Route::delete("/modules/{id}", [ModulesController::class, 'delete_module']);
