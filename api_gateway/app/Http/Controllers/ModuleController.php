@@ -23,7 +23,14 @@ class ModuleController extends Controller
     }
 
     public function index_module($id){
-        
+        $response = Http::withHeaders([
+            "Authorization" => env("SERVICES_TOKEN")
+        ])->get(env("CONTENT_MODULES_ENDPOINT")."/".$id);
+
+        return [
+            "status" => $response->status(),
+            "body" => $response->json()
+        ];
     }
 
     public function update_module(Request $request, $id){
