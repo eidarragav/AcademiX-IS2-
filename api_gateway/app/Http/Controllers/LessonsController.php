@@ -57,7 +57,30 @@ class LessonsController extends Controller
     }
 
     public function update_lesson(Request $request, $id){
+        $module_exist = Http::withHeaders([
+            "Authorization" => env("SERVICES_TOKEN")
+        ])->get(env("CONTENT_MODULES_ENDPOINT")."/".$request->course_id);
 
+        if($course_exist->status() == 404){
+            return [
+                "mensaje" => "el modulo no existe"
+            ];
+        };
+
+
+        $response = Http::withHeaders([
+            "Authorization" => env("SERVICES_TOKEN")
+        ])->put(env("CONTENT_LESSONS_ENDPOINT"),[
+            "module_id" => $request->module_id,
+            "title" => $request->title,
+            "type" => $request->type,
+            "content" => $request->content
+        ]);
+
+        return [
+            "status" => $response->status(),
+            "body" => $response->json()
+        ];
     } 
     
     public function delete_lesson($id){
