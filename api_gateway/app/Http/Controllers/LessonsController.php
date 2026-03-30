@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
-class LessonController extends Controller
+class LessonsController extends Controller
 {
     public function index_lesson($id){
 
@@ -24,6 +24,6 @@ class LessonController extends Controller
     } 
     
     public function delete_lesson($id){
-        
+
     }
 }
