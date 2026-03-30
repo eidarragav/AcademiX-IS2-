@@ -30,11 +30,12 @@ class LessonsController extends Controller
     }
 
     public function create_lesson(Request $request){
+        
         $module_exist = Http::withHeaders([
             "Authorization" => env("SERVICES_TOKEN")
-        ])->get(env("CONTENT_MODULES_ENDPOINT")."/".$request->course_id);
+        ])->get(env("CONTENT_MODULES_ENDPOINT")."/".$request->module_id);
 
-        if($course_exist->status() == 404){
+        if($module_exist->status() == 404 or $module_exist->status() == 400){
             return [
                 "mensaje" => "el modulo no existe"
             ];
@@ -59,9 +60,9 @@ class LessonsController extends Controller
     public function update_lesson(Request $request, $id){
         $module_exist = Http::withHeaders([
             "Authorization" => env("SERVICES_TOKEN")
-        ])->get(env("CONTENT_MODULES_ENDPOINT")."/".$request->course_id);
+        ])->get(env("CONTENT_MODULES_ENDPOINT")."/".$request->module_id);
 
-        if($course_exist->status() == 404){
+        if($module_exist->status() == 404 or $module_exist->status() == 400){
             return [
                 "mensaje" => "el modulo no existe"
             ];
@@ -70,7 +71,7 @@ class LessonsController extends Controller
 
         $response = Http::withHeaders([
             "Authorization" => env("SERVICES_TOKEN")
-        ])->put(env("CONTENT_LESSONS_ENDPOINT"),[
+        ])->put(env("CONTENT_LESSONS_ENDPOINT")."/".$id,[
             "module_id" => $request->module_id,
             "title" => $request->title,
             "type" => $request->type,

@@ -13,8 +13,7 @@ const lessonSchema = new mongoose.Schema({
     },
 
     module_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Module',
+        type: String,
         required: true
     },
 
