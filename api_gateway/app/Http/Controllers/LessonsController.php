@@ -19,7 +19,14 @@ class LessonsController extends Controller
     }
 
     public function index_lessons(){
+        $response = Http::withHeaders([
+            "Authorization" => env("SERVICES_TOKEN")
+        ])->get(env("CONTENT_LESSONS_ENDPOINT"));
 
+        return [
+            "status" => $response->status(),
+            "body" => $response->json()
+        ];
     }
 
     public function create_lesson(Request $request){
