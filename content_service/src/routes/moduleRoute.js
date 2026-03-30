@@ -13,8 +13,17 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
-    const module = await Module.findById(req.params.id);
-    res.json(module);
+    try {
+        const module = await Module.findById(req.params.id);
+
+        if (!module) {
+            return res.status(404).json({ message: 'Module not found' });
+        }
+
+        res.json(module);
+    } catch (error) {
+        res.status(400).json({ message: 'Invalid ID' });
+    }
 });
 
 router.put('/:id', async (req, res) => {
