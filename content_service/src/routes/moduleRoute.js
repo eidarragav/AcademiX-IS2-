@@ -12,9 +12,27 @@ router.get('/', async (req, res) => {
     res.json(modules);
 });
 
+const mongoose = require('mongoose');
+
 router.get('/:id', async (req, res) => {
-    const module = await Module.findById(req.params.id);
-    res.json(module);
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ message: 'Invalid ID format' });
+    }
+
+    try {
+        const module = await Module.findById(id);
+
+        if (!module) {
+            return res.status(404).json({ message: 'Module not found' });
+        }
+
+        res.json(module);
+
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
+    }
 });
 
 router.put('/:id', async (req, res) => {
