@@ -9,6 +9,7 @@ use App\Http\Controllers\ModulesController;
 use App\Http\Controllers\LessonsController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\QuestionsController;
+use App\Http\Controllers\SubmissionsController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -63,3 +64,10 @@ Route::get("/questions", [QuestionsController::class, 'index_questions']);
 Route::get("/questions/{id}", [QuestionsController::class, 'index_question']);
 Route::put("/questions/{id}", [QuestionsController::class, 'update_question']);
 Route::delete("/questions/{id}", [QuestionsController::class, 'delete_question']);
+
+//Questions routes
+Route::post("/submissions", [SubmissionsController::class, 'create_submission'])->middleware('auth:sanctum');
+Route::get("/submissions", [SubmissionsController::class, 'index_submissions']);
+Route::get("/submissions/{id}", [SubmissionsController::class, 'index_submission']);
+Route::put("/submissions/{id}", [SubmissionsController::class, 'update_submission'])->middleware('auth:sanctum');
+Route::delete("/submissions/{id}", [SubmissionsController::class, 'delete_submission']);
