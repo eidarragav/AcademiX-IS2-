@@ -18,7 +18,14 @@ class QuestionsController extends Controller
     }
 
     public function index_questions(){
+        $response = Http::withHeaders([
+            "Authorization" => env("SERVICES_TOKEN")
+        ])->get(env("QUESTIONS_EVALUATIONS_ENDPOINT"));
 
+        return [
+            "status" => $response->status(),
+            "body" => $response->json()
+        ];
     }
 
     public function create_question(){
