@@ -7,6 +7,7 @@ use App\Http\Controllers\CoursesController;
 use App\Http\Controllers\EnrollmentsController;
 use App\Http\Controllers\ModulesController;
 use App\Http\Controllers\LessonsController;
+use App\Http\Controllers\ExamController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -47,5 +48,12 @@ Route::get("/lessons", [LessonsController::class, 'index_lessons']);
 Route::get("/lessons/{id}", [LessonsController::class, 'index_lesson']);
 Route::put("/lessons/{id}", [LessonsController::class, 'update_lesson']);
 Route::delete("/lessons/{id}", [LessonsController::class, 'delete_lesson']);
+
+//Exams routes
+Route::post("/exams", [ExamController::class, 'create_exam']);
+Route::get("/exams", [ExamController::class, 'index_exams']);
+Route::get("/exams/{id}", [ExamController::class, 'index_exam']);
+Route::put("/exams/{id}", [ExamController::class, 'update_exam']);
+Route::delete("/exams/{id}", [ExamController::class, 'delete_exam']);
 
 

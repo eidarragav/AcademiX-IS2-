@@ -62,6 +62,7 @@ def register_routes(app):
 
         exam.title = data.get('title', exam.title)
         exam.passing_score = data.get('passing_score', exam.passing_score)
+        exam.course_id = data.get('course_id', exam.course_id)
 
         db.session.commit()
 
