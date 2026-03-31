@@ -56,4 +56,9 @@ Route::get("/exams/{id}", [ExamController::class, 'index_exam']);
 Route::put("/exams/{id}", [ExamController::class, 'update_exam']);
 Route::delete("/exams/{id}", [ExamController::class, 'delete_exam']);
 
-
+//Questions routes
+Route::post("/questions", [QuestionsController::class, 'create_question']);
+Route::get("/questions", [QuestionsController::class, 'index_questions']);
+Route::get("/questions/{id}", [QuestionsController::class, 'index_question']);
+Route::put("/questions/{id}", [QuestionsController::class, 'update_question']);
+Route::delete("/questions/{id}", [QuestionsController::class, 'delete_question']);
