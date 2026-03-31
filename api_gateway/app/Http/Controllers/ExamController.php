@@ -68,7 +68,7 @@ class ExamController extends Controller
 
         $response = Http::withHeaders([
             "Authorization" => env("SERVICES_TOKEN")
-        ])->put(env("EXAMS_EVALUATIONS_ENDPOINT"),[
+        ])->put(env("EXAMS_EVALUATIONS_ENDPOINT")."/".$id,[
             "title" => $request->title,
             "course_id" => $request->course_id,
             "passing_score" => $request->passing_score

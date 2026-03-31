@@ -50,10 +50,10 @@ Route::put("/lessons/{id}", [LessonsController::class, 'update_lesson']);
 Route::delete("/lessons/{id}", [LessonsController::class, 'delete_lesson']);
 
 //Exams routes
-Route::post("/exams", [ExamsController::class, 'create_exam']);
-Route::get("/exams", [ExamsController::class, 'index_exams']);
-Route::get("/exams/{id}", [ExamsController::class, 'index_exam']);
-Route::put("/exams/{id}", [ExamsController::class, 'update_exam']);
-Route::delete("/exams/{id}", [ExamsController::class, 'delete_exam']);
+Route::post("/exams", [ExamController::class, 'create_exam']);
+Route::get("/exams", [ExamController::class, 'index_exams']);
+Route::get("/exams/{id}", [ExamController::class, 'index_exam']);
+Route::put("/exams/{id}", [ExamController::class, 'update_exam']);
+Route::delete("/exams/{id}", [ExamController::class, 'delete_exam']);
 
 
