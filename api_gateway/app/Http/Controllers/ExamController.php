@@ -30,7 +30,7 @@ class ExamController extends Controller
     }
 
     public function create_exam(Request $request){
-        
+
         $course_exist = Http::withHeaders([
             "Authorization" => env("SERVICES_TOKEN")
         ])->get(env("COURSES_ENDPOINT")."/".$request->course_id);
@@ -56,7 +56,28 @@ class ExamController extends Controller
     }
 
     public function update_exam(Request $request, $id){
+        $course_exist = Http::withHeaders([
+            "Authorization" => env("SERVICES_TOKEN")
+        ])->get(env("COURSES_ENDPOINT")."/".$request->course_id);
 
+        if($course_exist->status() == 404){
+            return [
+                "mensaje" => "el curso no existe"
+            ];
+        };
+
+        $response = Http::withHeaders([
+            "Authorization" => env("SERVICES_TOKEN")
+        ])->put(env("EXAMS_EVALUATIONS_ENDPOINT"),[
+            "title" => $request->title,
+            "course_id" => $request->course_id,
+            "passing_score" => $request->passing_score
+        ]);
+
+        return [
+            "status" => $response->status(),
+            "body" => $response->json()
+        ]; 
     }
 
     public function delete_exam($id){
