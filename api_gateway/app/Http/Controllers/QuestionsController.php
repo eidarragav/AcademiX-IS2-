@@ -85,6 +85,13 @@ class QuestionsController extends Controller
     }
 
     public function delete_question(){
+        $response = Http::withHeaders([
+            "Authorization" => env("SERVICES_TOKEN")
+        ])->delete(env("QUESTIONS_EVALUATIONS_ENDPOINT"."/".$id));
 
+        return [
+            "status" => $response->status(),
+            "body" => $response->json()
+        ];
     }
 }
