@@ -8,7 +8,14 @@ use Illuminate\Support\Facades\Http;
 class ExamController extends Controller
 {
     public function index_exam($id){
-        
+        $response = Http::withHeaders([
+            "Authorization" => env("SERVICES_TOKEN")
+        ])->get(env("EXAMS_EVALUATIONS_ENDPOINT")."/".$id);
+
+        return [
+            "status" => $response->status(),
+            "body" => $response->json()
+        ];   
     }
 
     public function index_exams(){
