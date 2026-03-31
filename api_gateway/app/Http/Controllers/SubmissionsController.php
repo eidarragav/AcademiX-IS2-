@@ -65,7 +65,7 @@ class SubmissionsController extends Controller
 
         $response = Http::withHeaders([
             "Authorization" => env("SERVICES_TOKEN")
-        ])->put(env("SUBMISSIONS_EVALUATIONS_ENDPOINT"),[
+        ])->put(env("SUBMISSIONS_EVALUATIONS_ENDPOINT")."/".$id,[
             "exam_id" => $request->exam_id,
             "score" => $request->score,
             "user_id" => $user->id,
