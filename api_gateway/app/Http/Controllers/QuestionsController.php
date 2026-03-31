@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class QuestionsController extends Controller
 {
-    public function index_question(){
+    public function index_question($id){
         $response = Http::withHeaders([
             "Authorization" => env("SERVICES_TOKEN")
         ])->get(env("QUESTIONS_EVALUATIONS_ENDPOINT")."/".$id);
@@ -28,7 +29,7 @@ class QuestionsController extends Controller
         ];
     }
 
-    public function create_question(){
+    public function create_question(Request $request){
         $exam_exist = Http::withHeaders([
             "Authorization" => env("SERVICES_TOKEN")
         ])->get(env("EXAMS_EVALUATIONS_ENDPOINT")."/".$request->exam_id);
@@ -43,6 +44,7 @@ class QuestionsController extends Controller
             "Authorization" => env("SERVICES_TOKEN")
         ])->post(env("QUESTIONS_EVALUATIONS_ENDPOINT"),[
             "exam_id" => $request->exam_id,
+            "text" => $request->text,
             "option_a" => $request->option_a,
             "option_b" => $request->option_b,
             "option_c" => $request->option_c,
@@ -56,7 +58,7 @@ class QuestionsController extends Controller
         ]; 
     }
 
-    public function update_question(){
+    public function update_question(Request $request, $id){
         $exam_exist = Http::withHeaders([
             "Authorization" => env("SERVICES_TOKEN")
         ])->get(env("EXAMS_EVALUATIONS_ENDPOINT")."/".$request->exam_id);
@@ -69,8 +71,9 @@ class QuestionsController extends Controller
 
         $response = Http::withHeaders([
             "Authorization" => env("SERVICES_TOKEN")
-        ])->put(env("QUESTIONS_EVALUATIONS_ENDPOINT"),[
+        ])->put(env("QUESTIONS_EVALUATIONS_ENDPOINT")."/".$id,[
             "exam_id" => $request->exam_id,
+            "text" => $request->text,
             "option_a" => $request->option_a,
             "option_b" => $request->option_b,
             "option_c" => $request->option_c,
@@ -84,10 +87,10 @@ class QuestionsController extends Controller
         ]; 
     }
 
-    public function delete_question(){
+    public function delete_question($id){
         $response = Http::withHeaders([
             "Authorization" => env("SERVICES_TOKEN")
-        ])->delete(env("QUESTIONS_EVALUATIONS_ENDPOINT"."/".$id));
+        ])->delete(env("QUESTIONS_EVALUATIONS_ENDPOINT")."/".$id);
 
         return [
             "status" => $response->status(),

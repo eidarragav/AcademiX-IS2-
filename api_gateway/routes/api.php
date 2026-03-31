@@ -8,6 +8,7 @@ use App\Http\Controllers\EnrollmentsController;
 use App\Http\Controllers\ModulesController;
 use App\Http\Controllers\LessonsController;
 use App\Http\Controllers\ExamController;
+use App\Http\Controllers\QuestionsController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
