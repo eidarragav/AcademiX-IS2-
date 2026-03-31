@@ -29,7 +29,31 @@ class QuestionsController extends Controller
     }
 
     public function create_question(){
+        $exam_exist = Http::withHeaders([
+            "Authorization" => env("SERVICES_TOKEN")
+        ])->get(env("EXAMS_EVALUATIONS_ENDPOINT")."/".$request->exam_id);
 
+        if($exam_exist->status() == 404){
+            return [
+                "mensaje" => "el examen no existe"
+            ];
+        };
+
+        $response = Http::withHeaders([
+            "Authorization" => env("SERVICES_TOKEN")
+        ])->post(env("QUESTIONS_EVALUATIONS_ENDPOINT"),[
+            "exam_id" => $request->exam_id,
+            "option_a" => $request->option_a,
+            "option_b" => $request->option_b,
+            "option_c" => $request->option_c,
+            "option_d" => $request->option_d,
+            "correct_option" => $request->correct_option
+        ]);
+
+        return [
+            "status" => $response->status(),
+            "body" => $response->json()
+        ]; 
     }
 
     public function update_question(){
