@@ -192,6 +192,8 @@ def register_routes(app):
         data = request.json
 
         s.score = data.get('score', s.score)
+        s.exam_id = data.get('exam_id', s.exam_id)
+        s.user_id = data.get('user_id', s.user_id)
         s.passed = data.get('passed', s.passed)
 
         db.session.commit()
