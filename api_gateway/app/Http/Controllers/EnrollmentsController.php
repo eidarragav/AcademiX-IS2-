@@ -58,6 +58,7 @@ class EnrollmentsController extends Controller
     }
     
     public function update_enrollment(Request $request, $id){
+        $user = auth()->user();
 
         $course_exist = Http::withHeaders([
             "Authorization" => env("SERVICES_TOKEN")
@@ -73,6 +74,7 @@ class EnrollmentsController extends Controller
         $response = Http::withHeaders([
             "Authorization" => env("SERVICES_TOKEN")
         ])->put(env("ENROLLMENTS_ENDPOINT").$id."/",[
+            "user_id" => $user->id,
             "course_id" => $request->course_id,
             "status" => $request->status,
         ]);

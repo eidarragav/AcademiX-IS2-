@@ -1,29 +1,33 @@
 """
-AcademiX - Pruebas de rendimiento: Courses Service
-====================================================
+AcademiX - Pruebas de rendimiento: Enrollments Service
+=======================================================
 Todas las peticiones pasan por el API Gateway (puerto 8000).
- 
+
 Cómo correr:
-  locust -f locustfile_courses.py --host=http://localhost:8000
- 
+  locust -f locustfile_enrollments.py --host=http://localhost:8000
+
 Luego abrir http://localhost:8089 y configura desde la interfaz:
- 
+
   Prueba de capacidad  → Users: 10  | Spawn rate: 1  | Tiempo: ~3 min
   Prueba de carga      → Users: 30  | Spawn rate: 3  | Tiempo: ~2 min
   Prueba de estrés     → Users: 100 | Spawn rate: 10 | Tiempo: ~2 min
- 
+
 """
- 
-from locust import HttpUser, task, between # type: ignore
+
+from locust import HttpUser, task, between
 import random
- 
+
 TEST_EMAIL    = "elkin.com"
 TEST_PASSWORD = "1234"
- 
-SAMPLE_COURSE_IDS = [3,4,5]
- 
- 
-class CoursesUser(HttpUser):
+
+# IDs de cursos que ya existen en tu BD
+SAMPLE_COURSE_IDS = [3, 4, 5]
+
+# IDs de inscripciones que ya existen en tu BD
+SAMPLE_ENROLLMENT_IDS = [13, 14, 15]
+
+
+class EnrollmentsUser(HttpUser):
     wait_time = between(1, 3)
  
     def on_start(self):
@@ -43,99 +47,85 @@ class CoursesUser(HttpUser):
  
     def _headers(self):
         return {"Authorization": f"Bearer {self.token}"}
- 
+
     @task(5)
-    def listar_cursos(self):
+    def listar_inscripciones(self):
         with self.client.get(
-            "/api/courses",
+            "/api/enrollments",
             headers=self._headers(),
             catch_response=True,
-            name="[Courses] Listar cursos"
+            name="[Enrollments] Listar inscripciones"
         ) as r:
             r.success() if r.status_code == 200 else r.failure(f"Error {r.status_code}")
- 
+
     @task(4)
-    def obtener_curso(self):
-        course_id = random.choice(SAMPLE_COURSE_IDS)
+    def obtener_inscripcion(self):
+        enrollment_id = random.choice(SAMPLE_ENROLLMENT_IDS)
         with self.client.get(
-            f"/api/courses/{course_id}",
+            f"/api/enrollments/{enrollment_id}",
             headers=self._headers(),
             catch_response=True,
-            name="[Courses] Obtener curso"
+            name="[Enrollments] Obtener inscripcion"
         ) as r:
             r.success() if r.status_code in (200, 404) else r.failure(f"Error {r.status_code}")
- 
+
     @task(2)
-    def crear_curso(self):
+    def crear_inscripcion(self):
         payload = {
-            "title":         f"Curso prueba {random.randint(1000, 9999)}",
-            "description":   "Curso generado por prueba de rendimiento.",
-            "category":      random.choice(["Programación", "Diseño", "Data Science"]),
-            "level":         random.choice(["beginner", "intermediate", "advanced"]),
-            "instructor_id": 1,
+            "course_id": random.choice(SAMPLE_COURSE_IDS),
+            "status":    "active",
         }
         with self.client.post(
-            "/api/courses",
+            "/api/enrollments",
             json=payload,
             headers=self._headers(),
             catch_response=True,
-            name="[Courses] Crear curso"
+            name="[Enrollments] Crear inscripcion"
         ) as r:
             if r.status_code in (200, 201):
-                data = r.json()
-                self.created_course_id = data.get("id") or data.get("data", {}).get("id")
                 r.success()
             else:
                 r.failure(f"Error {r.status_code} — {r.text[:80]}")
- 
+
     @task(2)
-    def editar_curso(self):
-        # Usa un ID conocido de la BD, no depende de que crear haya corrido antes
-        course_id = random.choice(SAMPLE_COURSE_IDS)
+    def editar_inscripcion(self):
+        enrollment_id = random.choice(SAMPLE_ENROLLMENT_IDS)
         with self.client.put(
-            f"/api/courses/{course_id}",
-            json={
-                "title":       f"Editado {random.randint(1, 999)}",
-                "description": "Actualizado por prueba de rendimiento.",
-                "category":    "Programación",
-                "level":       "intermediate",
-            },
+            f"/api/enrollments/{enrollment_id}",
+            json={"status": random.choice(["active", "completed", "cancelled"])},
             headers=self._headers(),
             catch_response=True,
-            name="[Courses] Editar curso"
+            name="[Enrollments] Editar inscripcion"
         ) as r:
             r.success() if r.status_code in (200, 201) else r.failure(f"Error {r.status_code}")
- 
+
     @task(1)
-    def eliminar_curso(self):
-        # Crea un curso temporal y lo elimina en la misma tarea
+    def eliminar_inscripcion(self):
+        # Crea una inscripcion temporal y la elimina en la misma tarea
         payload = {
-            "title":         f"Curso a eliminar {random.randint(1000, 9999)}",
-            "description":   "Curso temporal para prueba de eliminación.",
-            "category":      "Programación",
-            "level":         "beginner",
-            "instructor_id": 1,
+            "course_id": random.choice(SAMPLE_COURSE_IDS),
+            "status":    "active",
         }
         with self.client.post(
-            "/api/courses",
+            "/api/enrollments",
             json=payload,
             headers=self._headers(),
             catch_response=True,
-            name="[Courses] Crear para eliminar"
+            name="[Enrollments] Crear para eliminar"
         ) as r:
             if r.status_code in (200, 201):
                 data = r.json()
-                course_id = data.get("id") or data.get("data", {}).get("id")
+                enrollment_id = data.get("id") or data.get("data", {}).get("id")
                 r.success()
-                if course_id:
+                if enrollment_id:
                     self.client.delete(
-                        f"/api/courses/{course_id}",
+                        f"/api/enrollments/{enrollment_id}",
                         headers=self._headers(),
-                        name="[Courses] Eliminar curso"
+                        name="[Enrollments] Eliminar inscripcion"
                     )
             else:
                 r.failure(f"Error al crear para eliminar: {r.status_code}")
- 
+
     def on_stop(self):
         if self.token:
             self.client.post(
