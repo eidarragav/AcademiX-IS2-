@@ -6,8 +6,8 @@ require('dotenv').config();
 
 
 function requireToken(req, res, next) {
-    const token = req.headers["Authorization"];
-    if (token !== `${process.env.SERVICES_TOKEN}`) {
+    const token = req.headers["authorization"];
+    if (token !== process.env.SERVICES_TOKEN) {
         return res.status(403).json({ error: "No autorizado" });
     }
     next();

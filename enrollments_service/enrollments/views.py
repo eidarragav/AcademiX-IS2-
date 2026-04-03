@@ -4,7 +4,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from .models import Enrollment
 from .serializers import EnrollmentSerializer
-from django.conf import settings
+import os 
+from dotenv import load_dotenv
 
 class EnrollmentViewSet(viewsets.ModelViewSet):
     queryset = Enrollment.objects.all()
@@ -13,7 +14,7 @@ class EnrollmentViewSet(viewsets.ModelViewSet):
     def dispatch(self, request, *args, **kwargs):
         token = request.headers.get("Authorization")
 
-        if token != settings.SERVICES_TOKEN:
+        if token != os.getenv("SERVICES_TOKEN"):
             return Response(
                 {"error": "No autorizado"},
                 status=status.HTTP_403_FORBIDDEN

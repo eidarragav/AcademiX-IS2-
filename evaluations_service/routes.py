@@ -94,6 +94,7 @@ def register_routes(app):
         db.session.commit()
 
         return jsonify({"message": "Eliminado"})
+        
     
 #Questions
     @app.route('/api/questions', methods=['POST'])
