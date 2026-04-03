@@ -8,7 +8,12 @@ class Exam(db.Model):
     course_id = db.Column(db.Integer, nullable = False)
     title = db.Column(db.String(30), nullable= False)
     passing_score = db.Column(db.Integer, nullable = False)
-    questions = db.relationship('Question', backref='exam', lazy=True)
+    questions = db.relationship(
+        'Question',
+        backref='exam',
+        lazy=True,
+        cascade="all, delete-orphan"
+    )
 
 class Question(db.Model):
     __tablename__ = 'questions'
@@ -20,6 +25,7 @@ class Question(db.Model):
     option_c = db.Column(db.String(200), nullable = False)
     option_d = db.Column(db.String(200), nullable = False)
     correct_option = db.Column(db.String(2), nullable = False)
+    
 
 class Submission(db.Model):
     __tablename__ = 'submissions'
