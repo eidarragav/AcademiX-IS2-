@@ -1,8 +1,22 @@
 from flask import jsonify, request, current_app
 from models import Exam, Submission, Question, db
+import os
+from dotenv import load_dotenv # type: ignore
+from functools import wraps
+
+
+def require_token(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.headers.get("Authorization")
+        if token!= os.getenv("SERVICES_TOKEN"):
+            return jsonify({'error' : "no autorizado, token erroneo"}), 401
+        return f(*args, **kwargs)
+    return decorated
 
 def register_routes(app):
     @app.route('/api/exams', methods=['POST'])
+    @require_token
     def create_exam():  
         data = request.json
 
@@ -18,6 +32,7 @@ def register_routes(app):
         return jsonify({"message": "Exam creado", "id": exam.id})
     
     @app.route('/api/exams', methods=['GET'])
+    @require_token
     def get_exams():
         exams = Exam.query.all()
 
@@ -33,6 +48,7 @@ def register_routes(app):
         return jsonify(result)
     
     @app.route('/api/exams/<int:id>', methods=['GET'])
+    @require_token
     def get_exam(id):   
         exam = Exam.query.get_or_404(id)
 
@@ -56,6 +72,7 @@ def register_routes(app):
         }), 200
     
     @app.route('/api/exams/<int:id>', methods=['PUT'])
+    @require_token
     def update_exam(id):
         exam = Exam.query.get_or_404(id)
         data = request.json
@@ -69,6 +86,7 @@ def register_routes(app):
         return jsonify({"message": "Actualizado"})
 
     @app.route('/api/exams/<int:id>', methods=['DELETE'])
+    @require_token
     def delete_exam(id):
         exam = Exam.query.get_or_404(id)
 
@@ -79,6 +97,7 @@ def register_routes(app):
     
 #Questions
     @app.route('/api/questions', methods=['POST'])
+    @require_token
     def create_question():
         data = request.json
 
@@ -107,6 +126,7 @@ def register_routes(app):
                         })
     
     @app.route('/api/questions', methods=['GET'])
+    @require_token
     def get_questions():
         questions = Question.query.all()
 
@@ -121,6 +141,7 @@ def register_routes(app):
         return jsonify(result)
     
     @app.route('/api/questions/<int:id>', methods=['PUT'])
+    @require_token
     def update_question(id):
         q = Question.query.get_or_404(id)
         data = request.json
@@ -147,6 +168,7 @@ def register_routes(app):
                         })
     
     @app.route('/api/questions/<int:id>', methods=['DELETE'])
+    @require_token
     def delete_question(id):
         q = Question.query.get_or_404(id)
 
@@ -157,6 +179,7 @@ def register_routes(app):
     
     #Submissions
     @app.route('/api/submissions', methods=['POST'])
+    @require_token
     def create_submission():
         data = request.json
 
@@ -173,6 +196,7 @@ def register_routes(app):
         return jsonify({"exam_id" : submission.exam_id, "user_id" : submission.user_id, "score" : submission.score, "passed" : submission.passed})
     
     @app.route('/api/submissions', methods=['GET'])
+    @require_token
     def get_submissions():
         subs = Submission.query.all()
 
@@ -187,6 +211,7 @@ def register_routes(app):
         ])
     
     @app.route('/api/submissions/<int:id>', methods=['PUT'])
+    @require_token
     def update_submission(id):
         s = Submission.query.get_or_404(id)
         data = request.json
@@ -202,6 +227,7 @@ def register_routes(app):
 
     
     @app.route('/api/submissions/<int:id>', methods=['DELETE'])
+    @require_token
     def delete_submission(id):
         s = Submission.query.get_or_404(id)
 
