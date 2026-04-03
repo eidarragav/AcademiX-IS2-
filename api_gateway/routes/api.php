@@ -34,7 +34,7 @@ Route::delete("/courses/{id}", [CoursesController::class, 'delete_course']);
 Route::post("/enrollments", [EnrollmentsController::class, 'create_enrollment'])->middleware('auth:sanctum');
 Route::get("/enrollments", [EnrollmentsController::class, 'index_enrollments']);
 Route::get("/enrollments/{id}", [EnrollmentsController::class, 'index_enrollment']);
-Route::put("/enrollments/{id}", [EnrollmentsController::class, 'update_enrollment']);
+Route::put("/enrollments/{id}", [EnrollmentsController::class, 'update_enrollment'])->middleware('auth:sanctum');;
 Route::delete("/enrollments/{id}", [EnrollmentsController::class, 'delete_enrollment']);
 
 //Modules routes
