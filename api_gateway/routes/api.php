@@ -15,15 +15,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post("/register", [AuthController::class, 'register']);
+Route::post("/login", [AuthController::class, 'login']);
+Route::post("/restore_password", [AuthController::class, 'restore_password']);
 
 //Todos requieren autenticacion del usuario para funcionar
 Route::middleware('auth:sanctum')->group(function () {
    //Autenticacion
-    Route::post("/register", [AuthController::class, 'register']);
-    Route::post("/login", [AuthController::class, 'login']);
     Route::post("/logout", [AuthController::class, 'logout'])->middleware('auth:sanctum');
-    Route::post("/restore_password", [AuthController::class, 'restore_password']);
-
 
     //Courses routes
     Route::post("/courses", [CoursesController::class, 'create_course'])->middleware('auth:sanctum');
