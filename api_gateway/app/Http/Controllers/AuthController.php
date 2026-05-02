@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -19,7 +20,7 @@ class AuthController extends Controller
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->password = $request->password;
+        $user->password = Hash::make($request->password);
         $user->question = $request->question;
         $user->answer = $request->answer;
         $user->save();
@@ -31,7 +32,7 @@ class AuthController extends Controller
     {
         $user = User::where('email', $request->email)->first();
 
-        if(!$user || !password_verify($request->password, $user->password)){
+        if(!$user || !Hash::check($request->password, $user->password)){
             return response()->json(['Acceso denegado' => 'Credenciales invalidades']);
         }
 
