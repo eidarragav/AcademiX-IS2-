@@ -32,6 +32,21 @@ services:
         condition: service_healthy
     networks:
       - academix_network
+  
+  courses:
+    build: 
+      context: ./courses_service
+      dockerfile: Dockerfile
+    image: academix_courses
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./courses_service/.env
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - academix_network
 
   
 
