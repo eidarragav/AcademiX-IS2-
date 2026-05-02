@@ -8,6 +8,5 @@ class Course(db.Model):
     description = db.Column(db.String(300), nullable= False)
     category = db.Column(db.String(100), nullable = False)
     level = db.Column(db.String(100), nullable = False)
-    #user_id
     instructor_id = db.Column(db.Integer, nullable = False)
 
