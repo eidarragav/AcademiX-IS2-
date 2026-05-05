@@ -3,6 +3,7 @@ from models import Course, db
 import os
 from dotenv import load_dotenv # type: ignore
 from functools import wraps
+from flask import abort
 
 
 def require_token(f):
@@ -29,7 +30,9 @@ def register_routes(app):
     @app.route("/api/courses/<int:id>", methods = ['GET'])
     @require_token
     def get_course(id):
-        course = Course.query.get_or_404(id)
+        course = db.session.get(Course, id)
+        if not course:
+            abort(404)
 
         return jsonify({'id': course.id,
                          'title' : course.title,
@@ -67,7 +70,9 @@ def register_routes(app):
     def update_courses(id):
         data = request.get_json()
 
-        course = Course.query.get_or_404(id)
+        course = db.session.get(Course, id)
+        if not course:
+            abort(404)
         course.title = data["title"]
         course.description = data["description"]
         course.category = data["category"]
@@ -86,7 +91,9 @@ def register_routes(app):
     @app.route('/api/courses/<int:id>', methods = ['DELETE'])
     @require_token
     def delete_courses(id):
-        course = Course.query.get_or_404(id)
+        course = db.session.get(Course, id)
+        if not course:
+            abort(404)
 
         db.session.delete(course)
         db.session.commit()
