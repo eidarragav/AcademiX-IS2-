@@ -63,11 +63,45 @@ services:
     networks:
       - academix_network
 
+  postgres:
+    image: postgres:15
+    container_name: academix_postgres
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - academix_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  enrollments:
+    build:
+      context: ./enrollments_service
+      dockerfile: Dockerfile
+    image: academix_enrollments
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./enrollments_service/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - academix_network
+
   
 
 
 volumes:
   mysql_data:
+  postgres_data:
  
 networks:
   academix_network:
