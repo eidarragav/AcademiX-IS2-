@@ -96,12 +96,38 @@ services:
     networks:
       - academix_network
 
+  mongodb:
+    image: mongo:6.0
+    container_name: academix_mongo
+    restart: always
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - academix_network
+
+  content:
+    build:
+      context: ./content_service
+      dockerfile: Dockerfile
+    image: academix_content
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./content_service/.env
+    depends_on:
+      - mongodb
+    networks:
+      - academix_network
+
   
 
 
 volumes:
   mysql_data:
   postgres_data:
+  mongo_data:
  
 networks:
   academix_network:
