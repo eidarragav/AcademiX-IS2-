@@ -1,0 +1,134 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    env_file:
+      - .env
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3306:3306"
+    networks:
+      - academix_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  gateway:
+    build:
+      context: ./api_gateway
+      dockerfile: Dockerfile
+    image: academix_gateway   
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./api_gateway/.env
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - academix_network
+  
+  courses:
+    build: 
+      context: ./courses_service
+      dockerfile: Dockerfile
+    image: academix_courses
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./courses_service/.env
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - academix_network
+
+  evaluations:
+    build: 
+      context: ./evaluations_service
+      dockerfile: Dockerfile
+    image: academix_evaluations
+    ports:
+      - "5001:5001"
+    env_file:
+      - ./evaluations_service/.env
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - academix_network
+
+  postgres:
+    image: postgres:15
+    container_name: academix_postgres
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - academix_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  enrollments:
+    build:
+      context: ./enrollments_service
+      dockerfile: Dockerfile
+    image: academix_enrollments
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./enrollments_service/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - academix_network
+
+  mongodb:
+    image: mongo:6.0
+    container_name: academix_mongo
+    restart: always
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - academix_network
+
+  content:
+    build:
+      context: ./content_service
+      dockerfile: Dockerfile
+    image: academix_content
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./content_service/.env
+    depends_on:
+      - mongodb
+    networks:
+      - academix_network
+
+  
+
+
+volumes:
+  mysql_data:
+  postgres_data:
+  mongo_data:
+ 
+networks:
+  academix_network:
+    driver: bridge
